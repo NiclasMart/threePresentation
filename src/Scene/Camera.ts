@@ -6,7 +6,7 @@ import Sizes from './Sizes';
 
 export default class Camera {
   instance: THREE.PerspectiveCamera;
-  controls!: OrbitControls
+  controls!: OrbitControls;
 
   private fov: number = 50
 
@@ -29,6 +29,11 @@ export default class Camera {
     return this.controls.getDistance();
   }
 
+  moveAutomatically()
+  {
+
+  }
+
   setCameraPosition(pos: THREE.Vector3) {
     // this.controls.enableDamping = false;
     // this.controls.update();
@@ -47,10 +52,7 @@ export default class Camera {
     this.controls = new OrbitControls(camera, renderUnit.renderer.domElement);
     this.controls.enableDamping = true
     this.controls.enablePan = false
-    this.controls.enableZoom = true
-    this.controls.maxDistance = 15
-    this.controls.minDistance = 3
-    this.controls.zoomSpeed = 0.1
+    this.controls.enableZoom = false;
     this.controls.update()
   }
 }

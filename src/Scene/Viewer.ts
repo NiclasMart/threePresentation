@@ -1,8 +1,9 @@
-import * as THREE from 'three';
+import * as THREE from "three";
 import Camera from './Camera';
 import RenderUnit from './RenderUnit';
 import Sizes from './Sizes';
 import Models from './sceneContent/Model';
+import Station from './sceneContent/Station';
 
 export default class Viewer {
 
@@ -27,6 +28,8 @@ export default class Viewer {
     this.camera = new Camera(this.scene, this.renderUnit, this.sizes);
 
     this.model = new Models(this.scene);
+
+    const newStation = new Station(new THREE.Vector3(0, 0, 0), this.scene);
 
     this.startRenderLoop();
   }
