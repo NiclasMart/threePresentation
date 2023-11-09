@@ -6,13 +6,15 @@ export default class Station {
     constructor(position: THREE.Vector3, scene: THREE.Scene){
         this.position = position;
 
-        const geometry = new THREE.SphereGeometry();
+        const geometry = new THREE.SphereGeometry(1);
         const mat = new THREE.MeshBasicMaterial();
         const sphere = new THREE.Mesh(geometry, mat);
-        sphere.position.set(this.position);
+        sphere.position.copy(this.position);
         scene.add(sphere);
-
-        console.log('test')
     };
+
+    getCameraPosition(): THREE.Vector3 {
+        return new THREE.Vector3(0, 0, 10).add(this.position);
+    }
 
 }

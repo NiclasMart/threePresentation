@@ -29,7 +29,15 @@ export default class Viewer {
 
     this.model = new Models(this.scene);
 
-    const newStation = new Station(new THREE.Vector3(0, 0, 0), this.scene);
+    const newStation = new Station(new THREE.Vector3(0, 0, -20), this.scene);
+
+    window.addEventListener('keypress', (event) => {
+      if (event.key === '1')
+      {
+        this.camera.setCameraTarget(newStation);
+        //this.camera.controls.target = newStation.position;
+      }
+    })
 
     this.startRenderLoop();
   }
@@ -38,7 +46,7 @@ export default class Viewer {
     const renderLoop = () => {
       //updated controls
       this.camera.controls.update();
-      this.camera.controls.enableDamping = true;
+      if (this.camera.inTransition) this.camera.updateCameraPosition();
 
       //render
       this.renderUnit.renderer.render(this.scene, this.camera.getActiveCamera());
