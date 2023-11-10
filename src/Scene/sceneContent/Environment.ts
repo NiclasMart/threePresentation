@@ -1,10 +1,10 @@
 import * as THREE from "three"
+import { randFloat, randInt } from "three/src/math/MathUtils"
 
 export default class Environment {
-  private environmentalMaps: THREE.CubeTexture[] = []
 
   constructor(scene: THREE.Scene) {
-    //this.setupEnvironmentMap(scene)
+
 
     const directionalLight = new THREE.DirectionalLight(0xffffff, 1)
     scene.add(directionalLight)
@@ -13,41 +13,39 @@ export default class Environment {
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.5)
     scene.add(ambientLight)
 
-    const floorGeometry = new THREE.PlaneGeometry(100, 100);
-    const floorMat = new THREE.MeshBasicMaterial();
+    const floorGeometry = new THREE.PlaneGeometry(1000, 1000);
+    const floorMat = new THREE.MeshBasicMaterial({
+      'color': '#000000'
+    });
     const floor = new THREE.Mesh(floorGeometry, floorMat);
     floor.rotateX(-Math.PI / 2)
     floor.position.y = -1
     scene.add(floor);
 
+    this.addMagentaCubes(scene);
   }
 
-  setupEnvironmentMap(scene: THREE.Scene) {
-    // const cubeTextureLoader = new THREE.CubeTextureLoader()
-    // this.environmentalMaps.push(cubeTextureLoader.load([
-    //   'assets/envMap/01/px.png',
-    //   'assets/envMap/01/nx.png',
-    //   'assets/envMap/01/py.png',
-    //   'assets/envMap/01/ny.png',
-    //   'assets/envMap/01/pz.png',
-    //   'assets/envMap/01/nz.png']
-    // ))
-    // this.environmentalMaps.push(cubeTextureLoader.load([
-    //   'assets/envMap/02/px.png',
-    //   'assets/envMap/02/nx.png',
-    //   'assets/envMap/02/py.png',
-    //   'assets/envMap/02/ny.png',
-    //   'assets/envMap/02/pz.png',
-    //   'assets/envMap/02/nz.png']
-    // ))
+  addMagentaCubes(scene: THREE.Scene)
+  {
+    const color = new THREE.Color('#F20074');
+    const amount = 100;
+    const minSize = 0.2;
+    const maxSize = 1;
 
-    scene.background = this.environmentalMaps[0]
-    scene.environment = this.environmentalMaps[0]
-  }
+    const cubeMat = new THREE.MeshPhongMaterial();
+    cubeMat.color = color
 
-  switchEnvironmentMap(scene: THREE.Scene, useAIMap: boolean) {
-    const mapIndex = (useAIMap ? 1 : 0)
-    scene.background = this.environmentalMaps[mapIndex]
-    scene.environment = this.environmentalMaps[mapIndex]
+    for (let count = 0; count < amount; count++) {
+      const scale = randFloat(minSize, maxSize);
+
+      const cubeGeo = new THREE.BoxGeometry(scale, scale, scale);
+      const cube = new THREE.Mesh(cubeGeo, cubeMat);
+
+      cube.position.set(randInt(-50, 50), -1, randInt(-100, 50));
+      cube.rotateX(randFloat(0, Math.PI * 2));
+      cube.rotateY(randFloat(0, Math.PI * 2));
+      scene.add(cube);
+      
+    }
   }
 }

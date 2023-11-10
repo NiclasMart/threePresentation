@@ -20,7 +20,7 @@ export default class Viewer {
   constructor() {
 
     this.scene = new THREE.Scene();
-    this.scene.background = new THREE.Color('#F20074');
+    this.scene.background = new THREE.Color('#222222');
 
     this.sizes = new Sizes(window.innerWidth, window.innerHeight);
     window.addEventListener('resize', () => {
@@ -32,7 +32,7 @@ export default class Viewer {
     this.environment = new Environment(this.scene);
     this.model = new Models(this.scene);
 
-    const newStation = new Station(new THREE.Vector3(0, 0, -20), this.scene);
+    const newStation = new Station(new THREE.Vector3(0, 0, -50), this.scene);
 
     window.addEventListener('keypress', (event) => {
       if (event.key === '1')
