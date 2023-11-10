@@ -4,6 +4,7 @@ import RenderUnit from './RenderUnit';
 import Sizes from './Sizes';
 import Models from './sceneContent/Model';
 import Station from './sceneContent/Station';
+import Environment from "./sceneContent/Environment";
 
 export default class Viewer {
 
@@ -12,12 +13,14 @@ export default class Viewer {
   renderUnit: RenderUnit
   sizes: Sizes
   model: Models
+  environment: Environment
 
   isFullscreen: boolean = false;
 
   constructor() {
 
     this.scene = new THREE.Scene();
+    this.scene.background = new THREE.Color('#F20074');
 
     this.sizes = new Sizes(window.innerWidth, window.innerHeight);
     window.addEventListener('resize', () => {
@@ -26,7 +29,7 @@ export default class Viewer {
 
     this.renderUnit = new RenderUnit(this.sizes);
     this.camera = new Camera(this.scene, this.renderUnit, this.sizes);
-
+    this.environment = new Environment(this.scene);
     this.model = new Models(this.scene);
 
     const newStation = new Station(new THREE.Vector3(0, 0, -20), this.scene);

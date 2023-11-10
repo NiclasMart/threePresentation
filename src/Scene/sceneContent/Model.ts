@@ -21,16 +21,17 @@ export default class Models {
               font: font,
               size: 0.5,
               height: 0.2,
-              curveSegments: 5,
+              curveSegments: 8,
               bevelEnabled: true,
               bevelThickness: 0.03,
               bevelSize: 0.02,
               bevelOffset: 0,
-              bevelSegments: 3
+              bevelSegments: 2
           }
       )
       textGeometry.center()
-      const textMaterial = new THREE.MeshBasicMaterial()
+      const textMaterial = new THREE.MeshPhongMaterial();
+      textMaterial.specular = new THREE.Color(0xffffff) 
       this.textMesh = new THREE.Mesh(textGeometry, textMaterial)
       scene.add(this.textMesh)
       }
