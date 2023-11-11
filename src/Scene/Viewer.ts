@@ -3,7 +3,9 @@ import Camera from './Camera';
 import RenderUnit from './RenderUnit';
 import Sizes from './Sizes';
 import Models from './sceneContent/Model';
-import Station from './sceneContent/Station';
+import ContentArea from './sceneContent/ContentArea';
+import AreaGenerator from './sceneContent/AreaGenerator';
+
 import Environment from "./sceneContent/Environment";
 
 export default class Viewer {
@@ -30,17 +32,24 @@ export default class Viewer {
     this.renderUnit = new RenderUnit(this.sizes);
     this.camera = new Camera(this.scene, this.renderUnit, this.sizes);
     this.environment = new Environment(this.scene);
-    this.model = new Models(this.scene);
+    //this.model = new Models(this.scene);
 
-    const newStation = new Station(new THREE.Vector3(0, 0, -50), this.scene);
+    const generator = new AreaGenerator(this.scene);
+    generator.addNewContentArea("three.js");
+    generator.addNewContentArea("test");
+    console.log(generator);
 
-    window.addEventListener('keypress', (event) => {
-      if (event.key === '1')
-      {
-        this.camera.setCameraTarget(newStation);
-        //this.camera.controls.target = newStation.position;
-      }
-    })
+    window.addEventListener('keydown', (event) => {
+            //TODO: add trigger time
+            if (event.key === 'ArrowLeft')
+            {
+                console.log('lastArea')
+            }
+            else if (event.key === 'ArrowRight')
+            {
+                generator.switchToNextArea(this.camera);
+            }
+        })
 
     this.startRenderLoop();
   }

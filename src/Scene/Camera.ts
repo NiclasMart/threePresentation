@@ -3,7 +3,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { inverseLerp, lerp } from 'three/src/math/MathUtils';
 import RenderUnit from './RenderUnit';
 import Sizes from './Sizes';
-import Station from './sceneContent/Station';
+import ContentArea from './sceneContent/ContentArea';
 
 export default class Camera {
   instance: THREE.PerspectiveCamera;
@@ -15,7 +15,7 @@ export default class Camera {
   transitionParameter: number = 0;
   oldCameraPosition: THREE.Vector3;
   newCameraPosition: THREE.Vector3;
-  cameraTarget: Station;
+  cameraTarget: ContentArea;
 
   constructor(scene: THREE.Scene, renderUnit: RenderUnit, sizes: Sizes) {
 
@@ -41,7 +41,7 @@ export default class Camera {
 
   }
 
-  setCameraTarget(target: Station) {
+  setCameraTarget(target: ContentArea) {
     this.controls.enabled = false;
     this.oldCameraPosition = this.instance.position.clone();
     this.newCameraPosition = target.getCameraPosition();
@@ -62,7 +62,7 @@ export default class Camera {
     }
 
     this.instance.position.lerpVectors(this.oldCameraPosition, this.newCameraPosition, this.transitionParameter);
-    this.controls.target.lerpVectors(new THREE.Vector3(), this.cameraTarget.position, this.transitionParameter);
+    this.controls.target.lerpVectors(new THREE.Vector3(), this.cameraTarget.origin, this.transitionParameter);
 
   }
 
