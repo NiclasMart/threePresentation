@@ -34,22 +34,12 @@ export default class Viewer {
     this.environment = new Environment(this.scene);
     //this.model = new Models(this.scene);
 
-    const generator = new AreaGenerator(this.scene);
+    const generator = new AreaGenerator(this.scene, this.camera);
     generator.addNewContentArea("three.js");
     generator.addNewContentArea("test");
     console.log(generator);
 
-    window.addEventListener('keydown', (event) => {
-            //TODO: add trigger time
-            if (event.key === 'ArrowLeft')
-            {
-                console.log('lastArea')
-            }
-            else if (event.key === 'ArrowRight')
-            {
-                generator.switchToNextArea(this.camera);
-            }
-        })
+    
 
     this.startRenderLoop();
   }

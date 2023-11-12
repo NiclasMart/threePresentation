@@ -1,20 +1,36 @@
 import * as THREE from 'three';
+import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js'
 import ContentArea from "./ContentArea";
 import Camera from '../Camera';
 
 export default class AreaGenerator {
     areas: ContentArea[] = [];
     scene: THREE.Scene;
-
+    fontLoader: FontLoader;
     activeAreaIndex: number = 0;
 
-    constructor(scene: THREE.Scene) {
+    constructor(scene: THREE.Scene, camera: Camera) {
         this.scene = scene;
+        this.fontLoader = new FontLoader();
+
+        //add switch event on arrow keys
+        window.addEventListener('keydown', (event) => {
+        //TODO: add trigger time
+            if (event.key === 'ArrowLeft')
+            {
+                this.switchToLastArea(camera);
+            }
+            else if (event.key === 'ArrowRight')
+            {
+                this.switchToNextArea(camera);
+            }
+        })
     }
 
     public addNewContentArea(content: string)
     {
-        const newArea = new ContentArea(content, this.calculateNewAreaPosition(), this.scene);
+        const areaPosition = this.calculateNewAreaPosition();
+        const newArea = new ContentArea(content, areaPosition, this.fontLoader, this.scene);
         this.areas.push(newArea);
     }
 
@@ -29,7 +45,11 @@ export default class AreaGenerator {
 
     public switchToLastArea(camera: Camera) 
     {
-
+        if (this.activeAreaIndex > 0)
+        {
+            const newArea = this.areas[--this.activeAreaIndex];
+            camera.setCameraTarget(newArea);
+        }
     }
 
     private calculateNewAreaPosition(): THREE.Vector3

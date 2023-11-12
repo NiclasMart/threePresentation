@@ -1,20 +1,48 @@
 import * as THREE from 'three';
+import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry';
+import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
 import { randFloat, randInt } from 'three/src/math/MathUtils';
 
 export default class ContentArea {
+    content: THREE.Mesh;
     origin: THREE.Vector3;
 
     size: number = 50;
 
-    constructor(content: string, position: THREE.Vector3, scene: THREE.Scene){
+    constructor(content: string, position: THREE.Vector3, fontLoader: FontLoader, scene: THREE.Scene){
         this.origin = position;
 
-        const geometry = new THREE.SphereGeometry(1);
-        const mat = new THREE.MeshBasicMaterial();
-        const sphere = new THREE.Mesh(geometry, mat);
-        sphere.position.copy(this.origin);
-        scene.add(sphere);
+        this.generateTextContent(content, fontLoader, scene)
     };
+
+    generateTextContent(text: string, fontLoader: FontLoader, scene: THREE.Scene)
+    {
+        fontLoader.load(
+            'fonts/helvetiker_regular.typeface.json',
+            (font) => {
+                const textGeometry = new TextGeometry(
+                    text,
+                    {
+                        font: font,
+                        size: 0.5,
+                        height: 0.2,
+                        curveSegments: 8,
+                        bevelEnabled: true,
+                        bevelThickness: 0.03,
+                        bevelSize: 0.02,
+                        bevelOffset: 0,
+                        bevelSegments: 2
+                    }
+                );
+                textGeometry.center()
+                const textMaterial = new THREE.MeshPhongMaterial();
+                textMaterial.specular = new THREE.Color(0xffffff); 
+                this.content = new THREE.Mesh(textGeometry, textMaterial);
+                this.content.position.copy(this.origin);
+                scene.add(this.content);
+            }
+        )
+    }
 
     getCameraPosition(): THREE.Vector3 {
         return new THREE.Vector3(0, 0, 10).add(this.origin);
