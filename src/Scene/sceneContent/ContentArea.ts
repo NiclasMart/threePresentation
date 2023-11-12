@@ -7,12 +7,13 @@ export default class ContentArea {
     content: THREE.Mesh;
     origin: THREE.Vector3;
 
-    size: number = 50;
+    size: number = 80;
 
     constructor(content: string, position: THREE.Vector3, fontLoader: FontLoader, scene: THREE.Scene){
         this.origin = position;
 
-        this.generateTextContent(content, fontLoader, scene)
+        this.generateTextContent(content, fontLoader, scene);
+        this.addMagentaCubes(scene);
     };
 
     generateTextContent(text: string, fontLoader: FontLoader, scene: THREE.Scene)
@@ -51,9 +52,9 @@ export default class ContentArea {
     addMagentaCubes(scene: THREE.Scene)
     {
         const color = new THREE.Color('#F20074');
-        const amount = 100;
+        const amount = 50;
         const minSize = 0.2;
-        const maxSize = 6;
+        const maxSize = 4;
 
         const cubeMat = new THREE.MeshPhongMaterial();
         cubeMat.color = color
@@ -63,8 +64,13 @@ export default class ContentArea {
 
           const cubeGeo = new THREE.BoxGeometry(scale, scale, scale);
           const cube = new THREE.Mesh(cubeGeo, cubeMat);
+          
+          const angle = Math.random() * Math.PI * 2;
+          const radius = randFloat(10, this.size/2);
 
-          cube.position.set(randInt(-50, 50), -1, randInt(-100, 50));
+          const randX = radius * Math.cos(angle);
+          const randZ = radius * Math.sin(angle);
+          cube.position.set(this.origin.x + randX, -1, this.origin.z + randZ);
           cube.rotateX(randFloat(0, Math.PI * 2));
           cube.rotateY(randFloat(0, Math.PI * 2));
           scene.add(cube);
