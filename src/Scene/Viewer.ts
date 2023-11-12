@@ -30,15 +30,29 @@ export default class Viewer {
     });
 
     this.renderUnit = new RenderUnit(this.sizes);
-    this.camera = new Camera(this.scene, this.renderUnit, this.sizes);
     this.environment = new Environment(this.scene);
     //this.model = new Models(this.scene);
-
-    const generator = new AreaGenerator(this.scene, this.camera);
-    generator.addNewContentArea("three.js");
+    
+    const generator = new AreaGenerator(this.scene);
+    const initialContentArea = generator.addNewContentArea("three.js");
     generator.addNewContentArea("test");
-    console.log(generator);
+    generator.addNewContentArea("test2");
+    
+    this.camera = new Camera(initialContentArea, this.scene, this.renderUnit, this.sizes);
 
+    //add switch event on arrow keys
+    window.addEventListener('keydown', (event) => {
+    //TODO: add trigger time
+        if (event.key === 'ArrowLeft')
+        {
+            generator.switchToLastArea(this.camera);
+        }
+        else if (event.key === 'ArrowRight')
+        {
+            generator.switchToNextArea(this.camera);
+        }
+    })
+    
     
 
     this.startRenderLoop();

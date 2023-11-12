@@ -44,8 +44,8 @@ export default class ContentArea {
         )
     }
 
-    getCameraPosition(): THREE.Vector3 {
-        return new THREE.Vector3(0, 0, 10).add(this.origin);
+    getViewPosition(): THREE.Vector3 {
+        return new THREE.Vector3(0, 0, 5).add(this.origin);
     }
 
     addMagentaCubes(scene: THREE.Scene)

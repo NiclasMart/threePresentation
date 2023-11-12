@@ -9,29 +9,17 @@ export default class AreaGenerator {
     fontLoader: FontLoader;
     activeAreaIndex: number = 0;
 
-    constructor(scene: THREE.Scene, camera: Camera) {
+    constructor(scene: THREE.Scene) {
         this.scene = scene;
         this.fontLoader = new FontLoader();
-
-        //add switch event on arrow keys
-        window.addEventListener('keydown', (event) => {
-        //TODO: add trigger time
-            if (event.key === 'ArrowLeft')
-            {
-                this.switchToLastArea(camera);
-            }
-            else if (event.key === 'ArrowRight')
-            {
-                this.switchToNextArea(camera);
-            }
-        })
     }
 
-    public addNewContentArea(content: string)
+    public addNewContentArea(content: string): ContentArea
     {
         const areaPosition = this.calculateNewAreaPosition();
         const newArea = new ContentArea(content, areaPosition, this.fontLoader, this.scene);
         this.areas.push(newArea);
+        return newArea;
     }
 
     public switchToNextArea(camera: Camera) 
@@ -39,7 +27,7 @@ export default class AreaGenerator {
         if (this.activeAreaIndex < this.areas.length-1)
         {
             const newArea = this.areas[++this.activeAreaIndex];
-            camera.setCameraTarget(newArea);
+            camera.transitionToNewTarget(newArea);
         }
     }
 
@@ -48,7 +36,7 @@ export default class AreaGenerator {
         if (this.activeAreaIndex > 0)
         {
             const newArea = this.areas[--this.activeAreaIndex];
-            camera.setCameraTarget(newArea);
+            camera.transitionToNewTarget(newArea);
         }
     }
 

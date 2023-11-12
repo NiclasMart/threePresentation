@@ -16,12 +16,14 @@ export default class Camera {
   oldCameraPosition: THREE.Vector3;
   newCameraPosition: THREE.Vector3;
   cameraTarget: ContentArea;
+  oldCameraTarget: ContentArea = null;
 
-  constructor(scene: THREE.Scene, renderUnit: RenderUnit, sizes: Sizes) {
+  constructor(initialTarget: ContentArea, scene: THREE.Scene, renderUnit: RenderUnit, sizes: Sizes) {
 
     //settings perspective camera
     this.instance = new THREE.PerspectiveCamera(this.fov, sizes.width / sizes.height, 0.1, 100);
-    this.instance.position.set(0, 0, 5);
+    this.instance.position.copy(initialTarget.getViewPosition());
+    this.cameraTarget = initialTarget;
     this.setControls(this.instance, renderUnit);
     scene.add(this.instance);
 
@@ -36,23 +38,18 @@ export default class Camera {
     return this.controls.getDistance();
   }
 
-  moveAutomatically()
-  {
-
-  }
-
-  setCameraTarget(target: ContentArea) {
+  transitionToNewTarget(newTarget: ContentArea) {
     this.controls.enabled = false;
+    this.oldCameraTarget = this.cameraTarget;
+    this.cameraTarget = newTarget;
     this.oldCameraPosition = this.instance.position.clone();
-    this.newCameraPosition = target.getCameraPosition();
-    this.cameraTarget = target;
+    this.newCameraPosition = newTarget.getViewPosition();
+    //this.cameraTarget = newTarget;
 
     this.inTransition = true;
   }
 
   updateCameraPosition(){
-    this.transitionParameter += 0.02;
-
     if (this.transitionParameter >= 1){
       this.transitionParameter = 0;
       this.inTransition = false;
@@ -61,9 +58,11 @@ export default class Camera {
       return;
     }
 
+    this.transitionParameter += 0.02;
+    //update camera position
     this.instance.position.lerpVectors(this.oldCameraPosition, this.newCameraPosition, this.transitionParameter);
-    this.controls.target.lerpVectors(new THREE.Vector3(), this.cameraTarget.origin, this.transitionParameter);
-
+    //update camera view target
+    this.controls.target.lerpVectors(this.oldCameraTarget.origin, this.cameraTarget.origin, this.transitionParameter);
   }
 
   resize = (sizes: Sizes) => {
