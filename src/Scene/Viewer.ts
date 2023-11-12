@@ -42,7 +42,8 @@ export default class Viewer {
 
     //add switch event on arrow keys
     window.addEventListener('keydown', (event) => {
-    //TODO: add trigger time
+        if (this.camera.inTransition) return;
+        
         if (event.key === 'ArrowLeft')
         {
             generator.switchToLastArea(this.camera);
